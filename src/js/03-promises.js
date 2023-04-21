@@ -35,6 +35,9 @@ function onSubmit(evt){
     });
     }
    
+    setTimeout(() => {
+       evt.target.reset(); 
+    },1000)
 
 }
 
