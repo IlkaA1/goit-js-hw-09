@@ -1,76 +1,58 @@
 import Notiflix from 'notiflix';
 
-const submitBt = document.querySelector('[type="submit"]');
-const amount = document.querySelector('[name="amount"]');
-const step = document.querySelector('[name="step"]');
-const delay = document.querySelector('[name="delay"]');
 
-submitBt.addEventListener('click', onSubmit);
+const form = document.querySelector('.form')
+const {amount, step, delay} = form;
 
 
 
-
+form.addEventListener('submit', onSubmit);
 
 function onSubmit(evt){
-  evt.preventDefault();
+   evt.preventDefault();
+   let delayFirst = delay.valueAsNumber;
+   let nextStep = step.valueAsNumber;
+   
+   for (let i = 0; i < amount.value; i += 1){
+    
+     if(i === 0){
+      createPromise(i,delay.value)
+      .then(({ position, delay }) => {
+       Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`)
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`)
+      });
+    }  else  {
+      let nextDelay = delayFirst += nextStep;
 
+    createPromise(i, nextDelay)
+    .then(({ position, delay }) => {
+      Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+    })
+    .catch(({ position, delay }) => {
+      Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+    });
+    }
+   
 
-const quantity = amount.value;
-const firstTimeOut = Number(delay.value);
-const allNextTimeOut = Number(step.value);
-const quantityPromies = [];
-
-
-for (let i = 0; i < quantity; i += 1){
-  quantityPromies.push(i);
 }
 
-console.log(quantityPromies);
-
-const promises = quantityPromies.map((promis, idx) => {
-  if(idx === 0){
-    createPromise(idx,firstTimeOut);
-  } else {
-    createPromise(idx,allNextTimeOut);
-  }
-
- 
-  
-  return promis;
-});
-};
- 
-
-
-
 function createPromise(position, delay) {
-
-  return new Promise((res, rej) =>{
-  const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-   res (console.log({ position, delay }));
-  } else {
-   rej(console.log({ position, delay }));
-  }
-})};
-
-createPromise(2,1500)
-  .then(({ position, delay }) => {
-    console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+  
+    return  new Promise((res, rej) =>{
+    const shouldResolve = Math.random() > 0.3;
+    const timerId = setTimeout(() => {
+    if (shouldResolve) {
+     res ({ position, delay });
+    } else {
+     rej({ position, delay });
+    }
+  }, delay);
   })
-  .catch(({ position, delay }) => {
-    console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-  });
+}
 
-  //createPromise(3,200);
-//createPromise(2,1500)
-//.then(result => Notiflix.Notify.success('Sol lucet omnibus')).catch(error => 
-//  Notiflix.Notify.failure('Qui timide rogat docet negare'));
 
-//createPromise(2, 1500)
-//  .then(({ position, delay }) => {
-//    Notiflix.Notify.success('Sol lucet omnibus');
-//  })
-//  .catch(({ position, delay }) => {
-//    Notiflix.Notify.failure('Qui timide rogat docet negare');
-//  });
+
+
+
