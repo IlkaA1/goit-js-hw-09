@@ -2,7 +2,7 @@ import Notiflix from 'notiflix';
 
 
 const form = document.querySelector('.form')
-const {amount, step, delay} = form;
+
 
 
 
@@ -10,6 +10,7 @@ form.addEventListener('submit', onSubmit);
 
 function onSubmit(evt){
    evt.preventDefault();
+   const {amount, step, delay} = evt.target.elements;
    let delayFirst = delay.valueAsNumber;
    let nextStep = step.valueAsNumber;
    
@@ -38,12 +39,11 @@ function onSubmit(evt){
     setTimeout(() => {
        evt.target.reset(); 
     },1000)
-
-}
+  };
 
 function createPromise(position, delay) {
   
-    return  new Promise((res, rej) =>{
+    return  new Promise((res, rej) => {
     const shouldResolve = Math.random() > 0.3;
     const timerId = setTimeout(() => {
     if (shouldResolve) {
@@ -53,9 +53,5 @@ function createPromise(position, delay) {
     }
   }, delay);
   })
+
 }
-
-
-
-
-

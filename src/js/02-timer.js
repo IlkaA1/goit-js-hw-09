@@ -8,6 +8,8 @@ const daysSt = document.querySelector('span[data-days]');
 const hoursSt = document.querySelector('span[data-hours]');
 const minutesSt = document.querySelector('span[data-minutes]');
 const secondsSt = document.querySelector('span[data-seconds]');
+const timer = document.querySelector('.value');
+
 
 btStart.disabled = true;
 
@@ -46,22 +48,28 @@ const options = {
     const date2 = new Date (date).getTime();
     
    const intervalID = setInterval(() => {
-    
+   
     const date1 = Date.now();
     let countdown = date2 - date1;
-    const { days, hours, minutes, seconds } = convertMs(countdown);
+
+    if (countdown < 0){
+      daysSt.textContent = "00";
+      hoursSt.textContent = "00";
+      minutesSt.textContent = "00";
+      secondsSt.textContent = "00";
+      return;
+    } 
+    else {
+      const { days, hours, minutes, seconds } = convertMs(countdown);
     
-    daysSt.textContent = `${days}`;
-    hoursSt.textContent = `${hours}`;
-    minutesSt.textContent = `${minutes}`;
-    secondsSt.textContent = `${seconds}`;
+      daysSt.textContent = `${days}`;
+      hoursSt.textContent = `${hours}`;
+      minutesSt.textContent = `${minutes}`;
+      secondsSt.textContent = `${seconds}`;
+    }
     
     }, 1000);
-
-    if (date2 === Date.now()){
-        clearInterval(intervalID);
-    }
-}
+   }
 
   
   
